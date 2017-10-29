@@ -8,21 +8,26 @@ import Messages exposing (..)
 panel : Html Msg
 panel =
     div [ class "card" ]
-        [ panelNew "new" "is-active"
+        [ panelHeader "new" "is-active"
         , panelPaste "paste1" ""
         , panelPaste "paste2" ""
         , panelPaste "paste3" ""
         ]
 
 
-panelNew : String -> String -> Html Msg
-panelNew pasteText blockClass =
+panelHeader : String -> String -> Html Msg
+panelHeader pasteText blockClass =
     header [ class "card-header" ]
         [ a [ class <| "card-footer-item " ++ blockClass ]
             [ div [ class "icon" ]
-                [ i [ class <| "mdi mdi-plus-box" ] []
+                [ i [ class "mdi mdi-plus-box" ] []
                 ]
             , text pasteText
+            ]
+        , a [ class "card-header-icon" ]
+            [ div [ class "icon" ]
+                [ i [ class "mdi mdi-chevron-down" ] []
+                ]
             ]
         ]
 
