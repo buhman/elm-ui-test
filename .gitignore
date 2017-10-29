@@ -1,0 +1,9 @@
+# distribution
+dist/
+
+# elm
+elm-stuff
+repl-temp-*
+
+# node
+node_modules
