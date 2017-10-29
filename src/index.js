@@ -1,5 +1,5 @@
 import { Main } from './elm/Main.elm'
-import './styles.sass'
+import './sass/styles.sass'
 
 let div = document.createElement('div')
 div.setAttribute("id", "main")

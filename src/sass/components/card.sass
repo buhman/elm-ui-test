@@ -1,0 +1,27 @@
+.card-header
+  margin-bottom: 1rem
+
+a.card-footer-item
+  &:hover
+    background-color: $panel-block-hover-background-color
+
+.card-footer
+  &:first-child
+    border-top: none
+
+.card-footer-item
+  margin-left: -1px
+  justify-content: left
+  border-left: $panel-item-border
+  color: $panel-block-color
+
+  &.is-active
+    border-left-color: $panel-block-active-border-left-color
+    color: $panel-block-active-color
+
+    .icon
+      color: $primary
+
+  .icon
+    color: $panel-icon-color
+    margin-right: 0.25em

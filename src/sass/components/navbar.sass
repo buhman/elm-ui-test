@@ -1,0 +1,12 @@
+$navbar-item-border: 1px solid $border !default
+
+.navbar
+  margin-bottom: 2rem
+
++desktop
+  a.navbar-item
+    border-bottom: $navbar-item-border
+    margin-bottom: -1px
+
+    &.is-active
+      border-bottom-color: $link
