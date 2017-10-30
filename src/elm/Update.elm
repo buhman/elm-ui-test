@@ -6,6 +6,11 @@ import Commands exposing (createPaste)
 import Debug
 
 
+removeNotification : Int -> List String -> List String
+removeNotification index notifications =
+    (List.take index notifications) ++ (List.drop (index + 1) notifications)
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -20,12 +25,18 @@ update msg model =
             )
 
         PasteCreateDone (Ok paste) ->
-            ( { model | pastes = paste :: model.pastes, pasteInProgress = False }
+            ( { model
+                | pastes = paste :: model.pastes
+                , pasteInProgress = False
+              }
             , Cmd.none
             )
 
         PasteCreateDone (Err err) ->
-            ( Debug.crash <| toString err
+            ( { model
+                | notifications = (toString err) :: model.notifications
+                , pasteInProgress = False
+              }
             , Cmd.none
             )
 
@@ -36,5 +47,10 @@ update msg model =
 
         ToggleOptionsVisible ->
             ( { model | optionsVisible = not model.optionsVisible }
+            , Cmd.none
+            )
+
+        RemoveNotification index ->
+            ( { model | notifications = removeNotification index model.notifications }
             , Cmd.none
             )

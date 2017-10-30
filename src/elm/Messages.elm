@@ -10,3 +10,4 @@ type Msg
     | CreatePaste
     | PasteInputChange String
     | ToggleOptionsVisible
+    | RemoveNotification Int

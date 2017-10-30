@@ -24,7 +24,7 @@ init : ( Model, Cmd Msg )
 init =
     let
         model =
-            Model False "" [] False False
+            Model False "" [] False False []
 
         cmd =
             Cmd.none

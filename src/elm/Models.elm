@@ -7,6 +7,7 @@ type alias Model =
     , pastes : List PasteResponse
     , pasteInProgress : Bool
     , optionsVisible : Bool
+    , notifications : List String
     }
 
 

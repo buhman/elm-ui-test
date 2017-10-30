@@ -7,6 +7,7 @@ import Models exposing (Model)
 import Messages exposing (..)
 import Navbar exposing (navbar)
 import Panel exposing (panel)
+import Notification exposing (notificationList)
 
 
 view : Model -> Html Msg
@@ -19,6 +20,7 @@ view model =
                 , div [ class "column is-one-quarter" ] [ panel model ]
                 ]
             ]
+        , notificationList model.notifications
         ]
 
 
