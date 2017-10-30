@@ -10,7 +10,7 @@ panel : List PasteResponse -> Html Msg
 panel pastes =
     let
         pasteItems =
-            List.map (\paste -> panelPaste paste.short "") pastes
+            List.map panelPaste pastes
     in
         div [ class "card" ]
             (panelHeader "new" "is-active" :: pasteItems)
@@ -33,13 +33,13 @@ panelHeader pasteText blockClass =
         ]
 
 
-panelPaste : String -> String -> Html Msg
-panelPaste pasteText blockClass =
+panelPaste : PasteResponse -> Html Msg
+panelPaste paste =
     footer [ class "card-footer" ]
-        [ a [ class <| "card-footer-item " ++ blockClass ]
+        [ a [ class "card-footer-item", href paste.url ]
             [ div [ class "icon" ]
                 [ i [ class <| "mdi mdi-file-document-box" ] []
                 ]
-            , text pasteText
+            , text paste.short
             ]
         ]

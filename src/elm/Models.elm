@@ -5,6 +5,7 @@ type alias Model =
     { menuActive : Bool
     , pasteInput : String
     , pastes : List PasteResponse
+    , pasteInProgress : Bool
     }
 
 
