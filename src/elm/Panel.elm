@@ -3,16 +3,17 @@ module Panel exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Messages exposing (..)
+import Models exposing (PasteResponse)
 
 
-panel : Html Msg
-panel =
-    div [ class "card" ]
-        [ panelHeader "new" "is-active"
-        , panelPaste "paste1" ""
-        , panelPaste "paste2" ""
-        , panelPaste "paste3" ""
-        ]
+panel : List PasteResponse -> Html Msg
+panel pastes =
+    let
+        pasteItems =
+            List.map (\paste -> panelPaste paste.short "") pastes
+    in
+        div [ class "card" ]
+            (panelHeader "new" "is-active" :: pasteItems)
 
 
 panelHeader : String -> String -> Html Msg
