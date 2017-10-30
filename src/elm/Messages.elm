@@ -9,3 +9,4 @@ type Msg
     | PasteCreateDone (Result Http.Error PasteResponse)
     | CreatePaste
     | PasteInputChange String
+    | ToggleOptionsVisible

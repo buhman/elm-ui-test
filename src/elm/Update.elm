@@ -33,3 +33,8 @@ update msg model =
             ( { model | pasteInput = newInput }
             , Cmd.none
             )
+
+        ToggleOptionsVisible ->
+            ( { model | optionsVisible = not model.optionsVisible }
+            , Cmd.none
+            )

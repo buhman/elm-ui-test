@@ -16,7 +16,7 @@ view model =
         , div [ class "container" ]
             [ div [ class "columns" ]
                 [ div [ class "column" ] [ pasteCard model.pasteInProgress ]
-                , div [ class "column is-one-quarter" ] [ panel model.pastes ]
+                , div [ class "column is-one-quarter" ] [ panel model ]
                 ]
             ]
         ]
