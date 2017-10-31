@@ -1,14 +1,29 @@
 module Update exposing (..)
 
-import Models exposing (Model, PasteRequest)
+import Http
+import Models exposing (..)
 import Messages exposing (..)
 import Commands exposing (createPaste)
-import Debug
 
 
-removeNotification : Int -> List String -> List String
+removeNotification : Int -> List Notification -> List Notification
 removeNotification index notifications =
     (List.take index notifications) ++ (List.drop (index + 1) notifications)
+
+
+createNotificationError : Http.Error -> Notification
+createNotificationError error =
+    case error of
+        Http.BadStatus response ->
+            Notification "api error" (response.body) Danger
+
+        error ->
+            Notification "error" (toString error) Danger
+
+
+createNotificationPaste : PasteResponse -> Notification
+createNotificationPaste paste =
+    Notification "success" paste.status Success
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -27,14 +42,15 @@ update msg model =
         PasteCreateDone (Ok paste) ->
             ( { model
                 | pastes = paste :: model.pastes
+                , notifications = (createNotificationPaste paste) :: model.notifications
                 , pasteInProgress = False
               }
             , Cmd.none
             )
 
-        PasteCreateDone (Err err) ->
+        PasteCreateDone (Err error) ->
             ( { model
-                | notifications = (toString err) :: model.notifications
+                | notifications = (createNotificationError error) :: model.notifications
                 , pasteInProgress = False
               }
             , Cmd.none

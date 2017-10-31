@@ -4,9 +4,10 @@ import Html exposing (..)
 import Html.Events exposing (onClick)
 import Html.Attributes exposing (..)
 import Messages exposing (..)
+import Models exposing (..)
 
 
-notificationList : List String -> Html Msg
+notificationList : List Notification -> Html Msg
 notificationList notifications =
     div [ class "notification-container" ]
         [ div [ class "columns" ]
@@ -16,9 +17,28 @@ notificationList notifications =
         ]
 
 
-notification : Int -> String -> Html Msg
-notification index notificationText =
+notificationIcon : Level -> String
+notificationIcon level =
+    case level of
+        Danger ->
+            "mdi mdi-close-circle has-text-danger"
+
+        Success ->
+            "mdi mdi-check-circle has-text-success"
+
+        Warning ->
+            "mdi mdi-alert-circle has-text-warning"
+
+        Info ->
+            "mdi mdi-information has-text-info"
+
+
+notification : Int -> Notification -> Html Msg
+notification index notification =
     div [ class "notification", onClick (RemoveNotification index) ]
-        [ button [ class "delete" ] []
-        , text notificationText
+        [ span [ class "icon" ]
+            [ i [ class <| notificationIcon notification.level ] []
+            ]
+        , strong [ class "inline-title" ] [ text notification.title ]
+        , code [] [ text notification.description ]
         ]

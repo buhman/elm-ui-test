@@ -7,7 +7,7 @@ type alias Model =
     , pastes : List PasteResponse
     , pasteInProgress : Bool
     , optionsVisible : Bool
-    , notifications : List String
+    , notifications : List Notification
     }
 
 
@@ -25,3 +25,17 @@ type alias PasteResponse =
     , date : String
     , size : Int
     }
+
+
+type alias Notification =
+    { title : String
+    , description : String
+    , level : Level
+    }
+
+
+type Level
+    = Danger
+    | Success
+    | Warning
+    | Info
