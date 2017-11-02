@@ -1,9 +1,12 @@
 module Update exposing (..)
 
 import Http
+import Navigation exposing (newUrl)
 import Models exposing (..)
 import Messages exposing (..)
 import Commands exposing (createPaste)
+import Route exposing (Route, routeToString)
+import Debug
 
 
 removeNotification : Int -> List Notification -> List Notification
@@ -24,6 +27,18 @@ createNotificationError error =
 createNotificationPaste : PasteResponse -> Notification
 createNotificationPaste paste =
     Notification "success" paste.status Success
+
+
+updateRoute : Maybe Route -> Model -> ( Model, Cmd Msg )
+updateRoute maybeRoute model =
+    case maybeRoute of
+        Nothing ->
+            Debug.crash "notfound"
+
+        Just route ->
+            ( { model | route = route }
+            , Cmd.none
+            )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -70,3 +85,11 @@ update msg model =
             ( { model | notifications = removeNotification index model.notifications }
             , Cmd.none
             )
+
+        SetRoute route ->
+            ( model
+            , newUrl (routeToString route)
+            )
+
+        UrlChange maybeRoute ->
+            updateRoute maybeRoute model

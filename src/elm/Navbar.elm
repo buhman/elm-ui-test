@@ -5,6 +5,8 @@ import Html.Events exposing (onClick)
 import Html.Attributes exposing (..)
 import Models exposing (Model)
 import Messages exposing (..)
+import Route exposing (Route)
+import Util exposing (onPreventDefaultClick)
 
 
 navbar : Model -> Html Msg
@@ -41,9 +43,24 @@ navbarMenu model =
     in
         div [ class navClass ]
             [ div [ class "navbar-start" ]
-                [ a [ class "navbar-item is-active" ] [ text "text" ]
-                , a [ class "navbar-item" ] [ text "file" ]
-                , a [ class "navbar-item" ] [ text "image" ]
+                [ a
+                    [ class "navbar-item is-active"
+                    , Route.href Route.Text
+                    , onPreventDefaultClick (SetRoute Route.Text)
+                    ]
+                    [ text "text" ]
+                , a
+                    [ class "navbar-item"
+                    , Route.href Route.File
+                    , onPreventDefaultClick (SetRoute Route.File)
+                    ]
+                    [ text "file" ]
+                , a
+                    [ class "navbar-item"
+                    , Route.href Route.Image
+                    , onPreventDefaultClick (SetRoute Route.Image)
+                    ]
+                    [ text "image" ]
                 ]
             , div [ class "navbar-end" ]
                 [ a [ class "navbar-item" ]

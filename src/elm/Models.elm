@@ -1,5 +1,7 @@
 module Models exposing (..)
 
+import Route exposing (Route)
+
 
 type alias Model =
     { menuActive : Bool
@@ -8,6 +10,7 @@ type alias Model =
     , pasteInProgress : Bool
     , optionsVisible : Bool
     , notifications : List Notification
+    , route : Route
     }
 
 

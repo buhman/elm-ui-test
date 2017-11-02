@@ -1,14 +1,16 @@
 module Main exposing (..)
 
 import Html
+import Navigation exposing (Location)
 import Models exposing (Model)
-import Messages exposing (Msg)
-import Update exposing (update)
+import Messages exposing (Msg, Msg(UrlChange))
+import Update exposing (update, updateRoute)
 import View exposing (view)
+import Route exposing (fromLocation, Route)
 
 
 main =
-    Html.program
+    Navigation.program (fromLocation >> UrlChange)
         { init = init
         , view = view
         , update = update
@@ -20,13 +22,10 @@ main =
 -- INIT
 
 
-init : ( Model, Cmd Msg )
-init =
+init : Location -> ( Model, Cmd Msg )
+init location =
     let
         model =
-            Model False "" [] False False []
-
-        cmd =
-            Cmd.none
+            Model False "" [] False False [] Route.Text
     in
-        ( model, cmd )
+        updateRoute (fromLocation location) model
