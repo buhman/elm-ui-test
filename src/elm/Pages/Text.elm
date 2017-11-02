@@ -8,16 +8,6 @@ import Models exposing (Model)
 import Pages.Text.HistoryCard exposing (historyCard)
 
 
-inProgressClass : Bool -> String
-inProgressClass inProgress =
-    case inProgress of
-        True ->
-            "is-loading"
-
-        False ->
-            ""
-
-
 inputCard : Bool -> Html Msg
 inputCard inProgress =
     div [ class "card" ]
@@ -36,7 +26,8 @@ inputCard inProgress =
             , div [ class "field" ]
                 [ div [ class "control" ]
                     [ button
-                        [ class <| "button is-fullwidth is-primary " ++ inProgressClass inProgress
+                        [ class "button is-fullwidth is-primary"
+                        , classList [ ( "is-loading", inProgress ) ]
                         , onClick CreatePaste
                         ]
                         [ text "create paste" ]

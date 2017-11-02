@@ -37,16 +37,6 @@ cardOptions visible =
         ]
 
 
-headerIcon : Bool -> String
-headerIcon visible =
-    case visible of
-        True ->
-            "mdi-chevron-down"
-
-        False ->
-            "mdi-chevron-up"
-
-
 cardHeader : Bool -> Html Msg
 cardHeader visible =
     header [ class "card-header" ]
@@ -58,7 +48,14 @@ cardHeader visible =
             ]
         , a [ class "card-header-icon", onClick ToggleOptionsVisible ]
             [ div [ class "icon" ]
-                [ i [ class <| "mdi " ++ headerIcon visible ] []
+                [ i
+                    [ classList
+                        [ ( "mdi", True )
+                        , ( "mdi-chevron-up", visible )
+                        , ( "mdi-chevron-down", (not visible) )
+                        ]
+                    ]
+                    []
                 ]
             ]
         ]

@@ -32,29 +32,25 @@ navbarBrand model =
 
 navbarMenu : Model -> Html Msg
 navbarMenu model =
-    let
-        navClass =
-            case model.menuActive of
-                True ->
-                    "navbar-menu is-active"
-
-                False ->
-                    "navbar-menu"
-    in
-        div [ class navClass ]
-            [ div [ class "navbar-start" ]
-                [ navbarLink model.currentRoute Route.Text "text"
-                , navbarLink model.currentRoute Route.File "file"
-                , navbarLink model.currentRoute Route.Image "image"
-                ]
-            , div [ class "navbar-end" ]
-                [ a [ class "navbar-item" ]
-                    [ span [ class "icon" ]
-                        [ i [ class "mdi mdi-github-circle mdi-24px" ] []
-                        ]
+    div
+        [ classList
+            [ ( "navbar-menu", True )
+            , ( "is-active", model.menuActive )
+            ]
+        ]
+        [ div [ class "navbar-start" ]
+            [ navbarLink model.currentRoute Route.Text "text"
+            , navbarLink model.currentRoute Route.File "file"
+            , navbarLink model.currentRoute Route.Image "image"
+            ]
+        , div [ class "navbar-end" ]
+            [ a [ class "navbar-item" ]
+                [ span [ class "icon" ]
+                    [ i [ class "mdi mdi-github-circle mdi-24px" ] []
                     ]
                 ]
             ]
+        ]
 
 
 navbarLink : Route -> Route -> String -> Html Msg
