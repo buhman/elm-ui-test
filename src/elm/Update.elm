@@ -36,7 +36,7 @@ updateRoute maybeRoute model =
             Debug.crash "notfound"
 
         Just route ->
-            ( { model | route = route }
+            ( { model | currentRoute = route }
             , Cmd.none
             )
 

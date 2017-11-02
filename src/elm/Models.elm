@@ -10,7 +10,7 @@ type alias Model =
     , pasteInProgress : Bool
     , optionsVisible : Bool
     , notifications : List Notification
-    , route : Route
+    , currentRoute : Route
     }
 
 

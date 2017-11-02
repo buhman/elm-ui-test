@@ -43,24 +43,9 @@ navbarMenu model =
     in
         div [ class navClass ]
             [ div [ class "navbar-start" ]
-                [ a
-                    [ class "navbar-item is-active"
-                    , Route.href Route.Text
-                    , onPreventDefaultClick (SetRoute Route.Text)
-                    ]
-                    [ text "text" ]
-                , a
-                    [ class "navbar-item"
-                    , Route.href Route.File
-                    , onPreventDefaultClick (SetRoute Route.File)
-                    ]
-                    [ text "file" ]
-                , a
-                    [ class "navbar-item"
-                    , Route.href Route.Image
-                    , onPreventDefaultClick (SetRoute Route.Image)
-                    ]
-                    [ text "image" ]
+                [ navbarLink model.currentRoute Route.Text "text"
+                , navbarLink model.currentRoute Route.File "file"
+                , navbarLink model.currentRoute Route.Image "image"
                 ]
             , div [ class "navbar-end" ]
                 [ a [ class "navbar-item" ]
@@ -70,6 +55,19 @@ navbarMenu model =
                     ]
                 ]
             ]
+
+
+navbarLink : Route -> Route -> String -> Html Msg
+navbarLink currentRoute route linkText =
+    a
+        [ classList
+            [ ( "navbar-item", True )
+            , ( "is-active", currentRoute == route )
+            ]
+        , Route.href route
+        , onPreventDefaultClick (SetRoute route)
+        ]
+        [ text linkText ]
 
 
 dropdown : Html Msg

@@ -1,4 +1,4 @@
-module Panel exposing (..)
+module Pages.Text.HistoryCard exposing (..)
 
 import Html exposing (..)
 import Html.Events exposing (onClick)
@@ -7,23 +7,23 @@ import Messages exposing (..)
 import Models exposing (Model, PasteResponse)
 
 
-panel : Model -> Html Msg
-panel model =
+historyCard : Model -> Html Msg
+historyCard model =
     let
         pasteItems =
-            List.map panelPaste model.pastes
+            List.map cardPaste model.pastes
     in
         div [ class "card " ] <|
             List.concat
-                [ [ panelHeader model.optionsVisible
-                  , panelOptions model.optionsVisible
+                [ [ cardHeader model.optionsVisible
+                  , cardOptions model.optionsVisible
                   ]
                 , pasteItems
                 ]
 
 
-panelOptions : Bool -> Html Msg
-panelOptions visible =
+cardOptions : Bool -> Html Msg
+cardOptions visible =
     div
         [ class "card-content", hidden (not visible) ]
         [ div [ class "field" ]
@@ -47,8 +47,8 @@ headerIcon visible =
             "mdi-chevron-up"
 
 
-panelHeader : Bool -> Html Msg
-panelHeader visible =
+cardHeader : Bool -> Html Msg
+cardHeader visible =
     header [ class "card-header" ]
         [ a [ class <| "card-footer-item is-active" ]
             [ div [ class "icon" ]
@@ -64,8 +64,8 @@ panelHeader visible =
         ]
 
 
-panelPaste : PasteResponse -> Html Msg
-panelPaste paste =
+cardPaste : PasteResponse -> Html Msg
+cardPaste paste =
     footer [ class "card-footer" ]
         [ a [ class "card-footer-item", href paste.url ]
             [ div [ class "icon" ]
