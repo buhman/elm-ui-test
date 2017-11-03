@@ -1,4 +1,4 @@
-module Navbar exposing (..)
+module Views.Navbar exposing (..)
 
 import Html exposing (..)
 import Html.Events exposing (onClick)
@@ -6,21 +6,22 @@ import Html.Attributes exposing (..)
 import Models exposing (Model)
 import Messages exposing (..)
 import Route exposing (Route)
+import Page exposing (Page)
 import Util exposing (onPreventDefaultClick)
 
 
-navbar : Model -> Html Msg
-navbar model =
+view : Page -> Model -> Html Msg
+view currentPage model =
     nav [ class "navbar has-shadow" ]
         [ div [ class "container" ]
-            [ navbarBrand model
-            , navbarMenu model
+            [ navbarBrand
+            , navbarMenu currentPage model
             ]
         ]
 
 
-navbarBrand : Model -> Html Msg
-navbarBrand model =
+navbarBrand : Html Msg
+navbarBrand =
     div [ class "navbar-brand" ]
         [ a [ class "navbar-item" ]
             [ span [ class "icon pb-logo" ] []
@@ -30,8 +31,8 @@ navbarBrand model =
         ]
 
 
-navbarMenu : Model -> Html Msg
-navbarMenu model =
+navbarMenu : Page -> Model -> Html Msg
+navbarMenu currentPage model =
     div
         [ classList
             [ ( "navbar-menu", True )
@@ -39,9 +40,9 @@ navbarMenu model =
             ]
         ]
         [ div [ class "navbar-start" ]
-            [ navbarLink model.currentRoute Route.Text "text"
-            , navbarLink model.currentRoute Route.File "file"
-            , navbarLink model.currentRoute Route.Image "image"
+            [ navbarLink currentPage Route.Text "text"
+            , navbarLink currentPage Route.File "file"
+            , navbarLink currentPage Route.Image "image"
             ]
         , div [ class "navbar-end" ]
             [ a [ class "navbar-item" ]
@@ -53,12 +54,12 @@ navbarMenu model =
         ]
 
 
-navbarLink : Route -> Route -> String -> Html Msg
-navbarLink currentRoute route linkText =
+navbarLink : Page -> Route -> String -> Html Msg
+navbarLink currentPage route linkText =
     a
         [ classList
             [ ( "navbar-item", True )
-            , ( "is-active", currentRoute == route )
+            , ( "is-active", isActive currentPage route )
             ]
         , Route.href route
         , onPreventDefaultClick (SetRoute route)
@@ -81,3 +82,26 @@ burger =
         , span [] []
         , span [] []
         ]
+
+
+
+{-
+   Not every page has a navbar link, so this maps navbar links
+   to pages
+-}
+
+
+isActive : Page -> Route -> Bool
+isActive page route =
+    case ( page, route ) of
+        ( Page.Text, Route.Text ) ->
+            True
+
+        ( Page.File, Route.File ) ->
+            True
+
+        ( Page.Image, Route.Image ) ->
+            True
+
+        _ ->
+            False

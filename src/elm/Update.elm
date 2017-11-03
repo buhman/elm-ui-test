@@ -6,6 +6,7 @@ import Models exposing (..)
 import Messages exposing (..)
 import Commands exposing (createPaste)
 import Route exposing (Route, routeToString)
+import Page exposing (Page)
 import Debug
 
 
@@ -33,12 +34,27 @@ updateRoute : Maybe Route -> Model -> ( Model, Cmd Msg )
 updateRoute maybeRoute model =
     case maybeRoute of
         Nothing ->
-            Debug.crash "notfound"
-
-        Just route ->
-            ( { model | currentRoute = route }
+            ( { model | currentPage = Page.NotFound }
             , Cmd.none
             )
+
+        Just route ->
+            ( { model | currentPage = routeMap route }
+            , Cmd.none
+            )
+
+
+routeMap : Route -> Page
+routeMap route =
+    case route of
+        Route.Text ->
+            Page.Text
+
+        Route.File ->
+            Page.File
+
+        Route.Image ->
+            Page.Image
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

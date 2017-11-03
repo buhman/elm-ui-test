@@ -37,8 +37,8 @@ inputCard inProgress =
         ]
 
 
-textPage : Model -> Html Msg
-textPage model =
+view : Model -> Html Msg
+view model =
     div [ class "columns" ]
         [ div [ class "column" ] [ inputCard model.pasteInProgress ]
         , div [ class "column is-one-quarter" ] [ historyCard model ]

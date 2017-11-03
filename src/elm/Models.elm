@@ -1,6 +1,6 @@
 module Models exposing (..)
 
-import Route exposing (Route)
+import Page exposing (Page)
 
 
 type alias Model =
@@ -10,7 +10,7 @@ type alias Model =
     , pasteInProgress : Bool
     , optionsVisible : Bool
     , notifications : List Notification
-    , currentRoute : Route
+    , currentPage : Page
     }
 
 
