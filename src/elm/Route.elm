@@ -10,22 +10,27 @@ type Route
     = Text
     | File
     | Image
+    | Root
 
 
 route : Parser (Route -> a) a
 route =
     oneOf
-        [ Url.map Text (s "text")
+        [ Url.map Root (s "")
+        , Url.map Text (s "text")
         , Url.map File (s "file")
         , Url.map Image (s "image")
         ]
 
 
 routeToString : Route -> String
-routeToString page =
+routeToString route =
     let
         pieces =
-            case page of
+            case route of
+                Root ->
+                    [ "" ]
+
                 Text ->
                     [ "text" ]
 

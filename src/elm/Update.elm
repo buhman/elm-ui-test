@@ -38,6 +38,11 @@ updateRoute maybeRoute model =
             , Cmd.none
             )
 
+        Just Route.Root ->
+            ( model
+            , newUrl (routeToString Route.Text)
+            )
+
         Just route ->
             ( { model | currentPage = routeMap route }
             , Cmd.none
@@ -47,6 +52,10 @@ updateRoute maybeRoute model =
 routeMap : Route -> Page
 routeMap route =
     case route of
+        -- this should actually never happen
+        Route.Root ->
+            Page.Blank
+
         Route.Text ->
             Page.Text
 
