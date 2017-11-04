@@ -3,8 +3,22 @@ module Commands exposing (..)
 import Http exposing (jsonBody)
 import Json.Encode exposing (Value, string, object)
 import Json.Decode as Decode
-import Messages exposing (..)
-import Models exposing (PasteRequest, PasteResponse)
+
+
+type alias PasteRequest =
+    { content : String
+    }
+
+
+type alias PasteResponse =
+    { url : String
+    , long : String
+    , short : String
+    , status : String
+    , digest : String
+    , date : String
+    , size : Int
+    }
 
 
 pasteRequestEncoder : PasteRequest -> Value
@@ -39,8 +53,8 @@ post url body decoder =
         }
 
 
-createPaste : PasteRequest -> Cmd Msg
-createPaste paste =
+createPaste : (Result Http.Error PasteResponse -> msg) -> PasteRequest -> Cmd msg
+createPaste message paste =
     let
         url =
             "https://ptpb.pw/"
@@ -51,4 +65,4 @@ createPaste paste =
         request =
             post url body pasteResponseDecoder
     in
-        Http.send PasteCreateDone request
+        Http.send message request

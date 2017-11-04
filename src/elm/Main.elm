@@ -8,6 +8,7 @@ import Update exposing (update, updateRoute)
 import View exposing (view)
 import Route exposing (fromLocation)
 import Page exposing (Page)
+import Pages.Text as Text
 
 
 main =
@@ -26,7 +27,12 @@ main =
 init : Location -> ( Model, Cmd Msg )
 init location =
     let
+        model : Model
         model =
-            Model False "" [] False False [] Page.Blank
+            { menuActive = False
+            , notifications = []
+            , currentPage = Page.Blank
+            , textModel = Text.initNew
+            }
     in
         updateRoute (fromLocation location) model

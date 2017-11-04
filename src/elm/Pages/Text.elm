@@ -1,11 +1,55 @@
 module Pages.Text exposing (..)
 
-import Html exposing (..)
+import Http
+import Html exposing (Html, div, button, textarea, text)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
-import Messages exposing (..)
-import Models exposing (Model)
+import Commands exposing (createPaste, PasteResponse, PasteRequest)
+import Notifications exposing (notificationError, notificationPaste, Notification)
 import Pages.Text.HistoryCard exposing (historyCard)
+
+
+-- MODEL
+
+
+type alias Model =
+    { input : String
+    , pastes : List PasteResponse
+    , inProgress : Bool
+    , optionsVisible : Bool
+    }
+
+
+initNew : Model
+initNew =
+    { input = ""
+    , pastes = []
+    , inProgress = False
+    , optionsVisible = False
+    }
+
+
+
+-- VIEW
+
+
+view : Model -> Html Msg
+view model =
+    let
+        input =
+            inputCard
+                model.inProgress
+
+        history =
+            historyCard
+                ToggleVisible
+                model.pastes
+                model.optionsVisible
+    in
+        div [ class "columns" ]
+            [ div [ class "column" ] [ input ]
+            , div [ class "column is-one-quarter" ] [ history ]
+            ]
 
 
 inputCard : Bool -> Html Msg
@@ -18,7 +62,7 @@ inputCard inProgress =
                         [ class "textarea"
                         , rows 20
                         , placeholder "paste content"
-                        , onInput PasteInputChange
+                        , onInput SetInput
                         ]
                         []
                     ]
@@ -37,9 +81,49 @@ inputCard inProgress =
         ]
 
 
-view : Model -> Html Msg
-view model =
-    div [ class "columns" ]
-        [ div [ class "column" ] [ inputCard model.pasteInProgress ]
-        , div [ class "column is-one-quarter" ] [ historyCard model ]
-        ]
+
+-- UPDATE
+
+
+type Msg
+    = CreatePaste
+    | CreatePasteCompleted (Result Http.Error PasteResponse)
+    | SetInput String
+    | ToggleVisible
+
+
+update : Msg -> Model -> ( Model, Cmd Msg, Maybe Notification )
+update msg model =
+    case msg of
+        CreatePaste ->
+            ( { model | inProgress = True }
+            , createPaste CreatePasteCompleted <| PasteRequest model.input
+            , Nothing
+            )
+
+        CreatePasteCompleted (Ok paste) ->
+            ( { model
+                | pastes = paste :: model.pastes
+                , inProgress = False
+              }
+            , Cmd.none
+            , Just (notificationPaste paste)
+            )
+
+        CreatePasteCompleted (Err error) ->
+            ( { model | inProgress = False }
+            , Cmd.none
+            , Just (notificationError error)
+            )
+
+        SetInput input ->
+            ( { model | input = input }
+            , Cmd.none
+            , Nothing
+            )
+
+        ToggleVisible ->
+            ( { model | optionsVisible = not model.optionsVisible }
+            , Cmd.none
+            , Nothing
+            )

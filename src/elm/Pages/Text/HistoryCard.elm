@@ -3,26 +3,25 @@ module Pages.Text.HistoryCard exposing (..)
 import Html exposing (..)
 import Html.Events exposing (onClick)
 import Html.Attributes exposing (..)
-import Messages exposing (..)
-import Models exposing (Model, PasteResponse)
+import Commands exposing (PasteResponse)
 
 
-historyCard : Model -> Html Msg
-historyCard model =
+historyCard : msg -> List PasteResponse -> Bool -> Html msg
+historyCard toggleMessage pastes optionsVisible =
     let
         pasteItems =
-            List.map cardPaste model.pastes
+            List.map cardPaste pastes
     in
         div [ class "card " ] <|
             List.concat
-                [ [ cardHeader model.optionsVisible
-                  , cardOptions model.optionsVisible
+                [ [ cardHeader toggleMessage optionsVisible
+                  , cardOptions optionsVisible
                   ]
                 , pasteItems
                 ]
 
 
-cardOptions : Bool -> Html Msg
+cardOptions : Bool -> Html msg
 cardOptions visible =
     div
         [ class "card-content", hidden (not visible) ]
@@ -37,8 +36,8 @@ cardOptions visible =
         ]
 
 
-cardHeader : Bool -> Html Msg
-cardHeader visible =
+cardHeader : msg -> Bool -> Html msg
+cardHeader toggleMessage visible =
     header [ class "card-header" ]
         [ a [ class <| "card-footer-item is-active" ]
             [ div [ class "icon" ]
@@ -46,7 +45,7 @@ cardHeader visible =
                 ]
             , text "new"
             ]
-        , a [ class "card-header-icon", onClick ToggleOptionsVisible ]
+        , a [ class "card-header-icon", onClick toggleMessage ]
             [ div [ class "icon" ]
                 [ i
                     [ classList
@@ -61,7 +60,7 @@ cardHeader visible =
         ]
 
 
-cardPaste : PasteResponse -> Html Msg
+cardPaste : PasteResponse -> Html msg
 cardPaste paste =
     footer [ class "card-footer" ]
         [ a [ class "card-footer-item", href paste.url ]

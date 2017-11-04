@@ -4,7 +4,7 @@ import Html exposing (..)
 import Html.Events exposing (onClick)
 import Html.Attributes exposing (..)
 import Messages exposing (..)
-import Models exposing (..)
+import Notifications exposing (Notification, Level(..))
 
 
 notificationList : List Notification -> Html Msg

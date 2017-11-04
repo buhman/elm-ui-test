@@ -37,7 +37,8 @@ viewPage model page =
                     |> frame
 
             Text ->
-                Text.view model
+                Text.view model.textModel
+                    |> Html.map TextMsg
                     |> frame
 
             _ ->
