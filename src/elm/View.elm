@@ -7,6 +7,7 @@ import Models exposing (Model)
 import Notification exposing (notificationList)
 import Page exposing (Page(..))
 import Pages.Text as Text
+import Pages.File as File
 import Views.Navbar as Navbar
 
 
@@ -39,6 +40,11 @@ viewPage model page =
             Text ->
                 Text.view model.textModel
                     |> Html.map TextMsg
+                    |> frame
+
+            File ->
+                File.view model.fileModel
+                    |> Html.map FileMsg
                     |> frame
 
             _ ->

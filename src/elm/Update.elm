@@ -9,6 +9,7 @@ import Route exposing (Route, routeToString)
 import Notifications exposing (removeNotification)
 import Page exposing (Page)
 import Pages.Text as Text
+import Pages.File as File
 
 
 updateRoute : Maybe Route -> Model -> ( Model, Cmd Msg )
@@ -89,3 +90,18 @@ update msg model =
                         ( newModel
                         , newCmd
                         )
+
+        FileMsg subMsg ->
+            let
+                ( fileModel, cmd ) =
+                    File.update subMsg model.fileModel
+
+                newModel =
+                    { model | fileModel = fileModel }
+
+                newCmd =
+                    Cmd.map FileMsg cmd
+            in
+                ( newModel
+                , newCmd
+                )

@@ -9,6 +9,7 @@ import View exposing (view)
 import Route exposing (fromLocation)
 import Page exposing (Page)
 import Pages.Text as Text
+import Pages.File as File
 
 
 main =
@@ -33,6 +34,7 @@ init location =
             , notifications = []
             , currentPage = Page.Blank
             , textModel = Text.initNew
+            , fileModel = File.initNew
             }
     in
         updateRoute (fromLocation location) model
