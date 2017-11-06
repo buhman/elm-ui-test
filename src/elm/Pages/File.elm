@@ -7,6 +7,7 @@ import Json.Decode as Json
 import Pages.File.Ports as Ports
 import File exposing (targetFiles, File)
 import Commands exposing (PasteResponse)
+import Notifications exposing (Notification, notificationPaste)
 
 
 -- MODEL
@@ -121,17 +122,19 @@ type Msg
     | CreateFilesCompleted PasteResponse
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+update : Msg -> Model -> ( Model, Cmd Msg, Maybe Notification )
 update msg model =
     case msg of
         SetFiles files ->
             ( { model | files = files }
             , Cmd.none
+            , Nothing
             )
 
         CreateFiles ->
             ( { model | inProgress = True }
             , Ports.createFiles <| List.map (\file -> file.blob) model.files
+            , Nothing
             )
 
         CreateFilesCompleted paste ->
@@ -141,6 +144,7 @@ update msg model =
                 , files = []
               }
             , Cmd.none
+            , Just (notificationPaste paste)
             )
 
 

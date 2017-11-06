@@ -6,7 +6,7 @@ import Models exposing (..)
 import Messages exposing (..)
 import Commands exposing (createPaste)
 import Route exposing (Route, routeToString)
-import Notifications exposing (removeNotification)
+import Notifications exposing (removeNotification, Notification)
 import Page exposing (Page)
 import Pages.Text as Text
 import Pages.File as File
@@ -48,8 +48,29 @@ routeMap route =
             Page.Image
 
 
+updatePage : (msg -> Msg) -> (model -> Model) -> ( model, Cmd msg, Maybe Notification ) -> Model -> ( Model, Cmd Msg )
+updatePage toMsg toModel subUpdate model =
+    let
+        ( subModel, subCmd, maybeNotification ) =
+            subUpdate
 
--- update
+        newModel =
+            toModel subModel
+
+        cmd =
+            Cmd.map toMsg subCmd
+
+        notifications =
+            case maybeNotification of
+                Just notification ->
+                    notification :: model.notifications
+
+                Nothing ->
+                    model.notifications
+    in
+        ( { newModel | notifications = notifications }
+        , cmd
+        )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -74,41 +95,16 @@ update msg model =
             updateRoute maybeRoute model
 
         TextMsg subMsg ->
-            let
-                ( textModel, cmd, maybeNotification ) =
-                    Text.update subMsg model.textModel
-
-                newModel =
-                    { model | textModel = textModel }
-
-                newCmd =
-                    Cmd.map TextMsg cmd
-            in
-                case maybeNotification of
-                    Just notification ->
-                        ( { newModel | notifications = notification :: newModel.notifications }
-                        , newCmd
-                        )
-
-                    Nothing ->
-                        ( newModel
-                        , newCmd
-                        )
+            updatePage TextMsg
+                (\subModel -> { model | textModel = subModel })
+                (Text.update subMsg model.textModel)
+                model
 
         FileMsg subMsg ->
-            let
-                ( fileModel, cmd ) =
-                    File.update subMsg model.fileModel
-
-                newModel =
-                    { model | fileModel = fileModel }
-
-                newCmd =
-                    Cmd.map FileMsg cmd
-            in
-                ( newModel
-                , newCmd
-                )
+            updatePage FileMsg
+                (\subModel -> { model | fileModel = subModel })
+                (File.update subMsg model.fileModel)
+                model
 
 
 
