@@ -4,12 +4,13 @@ import Html
 import Navigation exposing (Location)
 import Models exposing (Model)
 import Messages exposing (Msg, Msg(UrlChange))
-import Update exposing (update, updateRoute)
+import Update exposing (update, updateRoute, subscriptions)
 import View exposing (view)
 import Route exposing (fromLocation)
 import Page exposing (Page)
 import Pages.Text as Text
 import Pages.File as File
+import Pages.File.Ports as Ports
 
 
 main =
@@ -17,7 +18,7 @@ main =
         { init = init
         , view = view
         , update = update
-        , subscriptions = always Sub.none
+        , subscriptions = subscriptions
         }
 
 

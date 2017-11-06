@@ -2,11 +2,11 @@ module Pages.File exposing (..)
 
 import Html exposing (Html, div, button, label, input, i, text, span, table, tbody, thead, tr, td, th)
 import Html.Attributes exposing (..)
-import Html.Events exposing (on, targetValue)
-import Debug
+import Html.Events exposing (on, targetValue, onClick)
 import Json.Decode as Json
 import Pages.File.Ports as Ports
 import File exposing (targetFiles, File)
+import Commands exposing (PasteResponse)
 
 
 -- MODEL
@@ -15,6 +15,8 @@ import File exposing (targetFiles, File)
 type alias Model =
     { files : List File
     , input : String
+    , inProgress : Bool
+    , pastes : List PasteResponse
     }
 
 
@@ -22,6 +24,8 @@ initNew : Model
 initNew =
     { files = []
     , input = "none"
+    , inProgress = False
+    , pastes = []
     }
 
 
@@ -40,7 +44,8 @@ view model =
                 [ div [ class "control" ]
                     [ button
                         [ class "button is-fullwidth is-primary"
-                        , classList [ ( "is-loading", False ) ]
+                        , classList [ ( "is-loading", model.inProgress ) ]
+                        , onClick CreateFiles
                         ]
                         [ text "create paste" ]
                     ]
@@ -56,6 +61,9 @@ fileInput files =
             [ input
                 [ class "file-input"
                 , type_ "file"
+
+                -- fixme
+                , multiple False
                 , on "change" (Json.map SetFiles targetFiles)
                 ]
                 []
@@ -109,6 +117,8 @@ fileLabel file =
 
 type Msg
     = SetFiles (List File)
+    | CreateFiles
+    | CreateFilesCompleted PasteResponse
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -119,6 +129,27 @@ update msg model =
             , Cmd.none
             )
 
+        CreateFiles ->
+            ( { model | inProgress = True }
+            , Ports.createFiles <| List.map (\file -> file.blob) model.files
+            )
+
+        CreateFilesCompleted paste ->
+            ( { model
+                | inProgress = False
+                , pastes = paste :: model.pastes
+                , files = []
+              }
+            , Cmd.none
+            )
 
 
---Ports.files <| List.map (\file -> file.blob) files
+
+-- Subscriptions
+
+
+subscriptions : Sub Msg
+subscriptions =
+    Sub.batch
+        [ Ports.createFilesCompleted CreateFilesCompleted
+        ]

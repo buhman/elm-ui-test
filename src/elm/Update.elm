@@ -48,6 +48,10 @@ routeMap route =
             Page.Image
 
 
+
+-- update
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -105,3 +109,24 @@ update msg model =
                 ( newModel
                 , newCmd
                 )
+
+
+
+-- subscriptions
+
+
+pageSubscriptions : Page -> Sub Msg
+pageSubscriptions page =
+    case page of
+        Page.File ->
+            Sub.map FileMsg File.subscriptions
+
+        _ ->
+            Sub.none
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.batch
+        [ pageSubscriptions model.currentPage
+        ]
