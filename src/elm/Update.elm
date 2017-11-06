@@ -61,12 +61,9 @@ updatePage toMsg toModel subUpdate model =
             Cmd.map toMsg subCmd
 
         notifications =
-            case maybeNotification of
-                Just notification ->
-                    notification :: model.notifications
-
-                Nothing ->
-                    model.notifications
+            maybeNotification
+                |> Maybe.map (flip (::) model.notifications)
+                |> Maybe.withDefault model.notifications
     in
         ( { newModel | notifications = notifications }
         , cmd
