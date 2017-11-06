@@ -2,6 +2,7 @@ module Notifications exposing (..)
 
 import Http
 import Commands exposing (PasteResponse)
+import Pages.File.Ports exposing (FetchError(..))
 
 
 type Level
@@ -35,6 +36,16 @@ notificationError error =
 
         error ->
             Notification "error" (toString error) Danger
+
+
+notificationFetchError : FetchError -> Notification
+notificationFetchError error =
+    case error of
+        ApiError message ->
+            Notification "api error" (message) Danger
+
+        NetworkError message ->
+            Notification "network error" (message) Danger
 
 
 notificationPaste : PasteResponse -> Notification

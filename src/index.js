@@ -13,12 +13,20 @@ let app = Main.embed(div)
 
 app.ports.createFiles.subscribe((files) => {
   // fixme: not sure if we should process an array of files, or just one file
-  console.assert(files[0] != undefined)
+  if (files[0] == undefined) {
+    app.ports.createFilesCompleted.send({
+      type: "api",
+      error: "no file selected"
+    })
+    return
+  }
 
   let fd = new FormData()
   fd.append('c', files[0])
 
-  let request = new Request('https://ptpb.pw/', {
+  console.log("here", files[0])
+
+  let request = new Request('https://ptpb.pw/f', {
     method: 'post',
     body: fd,
     headers: new Headers({
@@ -27,8 +35,22 @@ app.ports.createFiles.subscribe((files) => {
   })
 
   fetch(request).then((response) => {
-    return response.json()
-  }).then((data) => {
-    app.ports.createFilesCompleted.send(data)
+    // XXX: what happens if invalid json?
+    return response.json().then((data) => {
+      if (!response.ok)
+        app.ports.createFilesCompleted.send({
+          type: "api",
+          // hack: this is only to be consistent for now; (also it looks kindof edgy/cool)
+          //  -- instead ApiError should be represented by a StatusResponse
+          error: JSON.stringify(data)
+        })
+      else
+        app.ports.createFilesCompleted.send(data)
+    })
+  }).catch((error) => {
+    app.ports.createFilesCompleted.send({
+      type: "network",
+      error: error.message
+    })
   })
 })

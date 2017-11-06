@@ -4,10 +4,11 @@ import Html exposing (Html, div, button, label, input, i, text, span, table, tbo
 import Html.Attributes exposing (..)
 import Html.Events exposing (on, targetValue, onClick)
 import Json.Decode as Json
-import Pages.File.Ports as Ports
+import Pages.File.Ports as Ports exposing (decodeFetchResult, FetchError)
 import File exposing (targetFiles, File)
 import Commands exposing (PasteResponse)
-import Notifications exposing (Notification, notificationPaste)
+import Notifications exposing (Notification, notificationPaste, notificationFetchError)
+import Http
 
 
 -- MODEL
@@ -119,7 +120,7 @@ fileLabel file =
 type Msg
     = SetFiles (List File)
     | CreateFiles
-    | CreateFilesCompleted PasteResponse
+    | CreateFilesCompleted (Result FetchError PasteResponse)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg, Maybe Notification )
@@ -137,7 +138,7 @@ update msg model =
             , Nothing
             )
 
-        CreateFilesCompleted paste ->
+        CreateFilesCompleted (Ok paste) ->
             ( { model
                 | inProgress = False
                 , pastes = paste :: model.pastes
@@ -145,6 +146,14 @@ update msg model =
               }
             , Cmd.none
             , Just (notificationPaste paste)
+            )
+
+        CreateFilesCompleted (Err error) ->
+            ( { model
+                | inProgress = False
+              }
+            , Cmd.none
+            , Just (notificationFetchError error)
             )
 
 
@@ -155,5 +164,5 @@ update msg model =
 subscriptions : Sub Msg
 subscriptions =
     Sub.batch
-        [ Ports.createFilesCompleted CreateFilesCompleted
+        [ Ports.createFilesCompleted (decodeFetchResult >> CreateFilesCompleted)
         ]
