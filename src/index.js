@@ -19,6 +19,7 @@ class ApiError extends Error {
 async function createFile(file) {
   let fd = new FormData()
   fd.append('c', file)
+  fd.append('f', file.name)
 
   let request = new Request('https://ptpb.pw', {
     method: 'post',
